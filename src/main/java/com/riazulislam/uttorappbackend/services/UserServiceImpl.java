@@ -38,4 +38,35 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public ResponseEntity<?> updateUserInfo(UUID id, User user) {
+        try {
+            Optional<User> existingUser = this.userRepository.findById(id);
+
+            if(existingUser.isEmpty()) {
+                return new ResponseEntity<>("user not found with this id: " + id, HttpStatus.NOT_FOUND);
+            }
+
+            User updatedUser = existingUser.get();
+
+            if(user.getUsername() != null) {
+                updatedUser.setUsername(user.getUsername());
+            }
+
+            if(user.getEmail() != null) {
+                updatedUser.setEmail(user.getEmail());
+            }
+
+            if(user.getBio() != null) {
+                updatedUser.setBio(user.getBio());
+            }
+
+            userRepository.save(updatedUser);
+
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

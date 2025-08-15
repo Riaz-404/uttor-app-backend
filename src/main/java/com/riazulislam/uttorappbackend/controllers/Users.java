@@ -26,4 +26,9 @@ public class Users {
     public ResponseEntity<?> getUserInfo(@PathVariable UUID id) {
         return this.userService.getUserInfo(id);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateUserInfo(@PathVariable UUID id,@RequestBody User user) {
+        return this.userService.updateUserInfo(id, user);
+    }
 }
