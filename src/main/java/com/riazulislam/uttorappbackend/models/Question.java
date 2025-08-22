@@ -26,6 +26,7 @@ public class Question extends BaseModel {
     )
     private List<Topic> topics = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "question_user", referencedColumnName = "id")
     private User user;
 }

@@ -1,5 +1,6 @@
 package com.riazulislam.uttorappbackend.controllers;
 
+import com.riazulislam.uttorappbackend.adapters.CreateQuestionDtoToQuestionAdapter;
 import com.riazulislam.uttorappbackend.dtos.QuestionDto;
 import com.riazulislam.uttorappbackend.dtos.QuestionResponseDto;
 import com.riazulislam.uttorappbackend.services.QuestionService;
@@ -13,8 +14,11 @@ import java.util.List;
 public class QuestionsController {
     private final QuestionService questionService;
 
-    public QuestionsController(QuestionService questionService) {
+    private final CreateQuestionDtoToQuestionAdapter createQuestionDtoToQuestionAdapter;
+
+    public QuestionsController(QuestionService questionService, CreateQuestionDtoToQuestionAdapter createQuestionDtoToQuestionAdapter) {
         this.questionService = questionService;
+        this.createQuestionDtoToQuestionAdapter = createQuestionDtoToQuestionAdapter;
     }
 
     @GetMapping("/search")
@@ -26,7 +30,7 @@ public class QuestionsController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createQuestion(@RequestBody QuestionDto question) {
-        return this.questionService.createNewQuestion(question);
+    public ResponseEntity<?> createQuestion(@RequestBody QuestionDto questionDto) {
+        return this.questionService.createNewQuestion(createQuestionDtoToQuestionAdapter.dtoToQuestion(questionDto));
     }
 }
