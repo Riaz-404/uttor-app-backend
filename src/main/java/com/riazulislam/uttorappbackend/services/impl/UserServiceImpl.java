@@ -1,7 +1,8 @@
-package com.riazulislam.uttorappbackend.services;
+package com.riazulislam.uttorappbackend.services.impl;
 
 import com.riazulislam.uttorappbackend.models.User;
 import com.riazulislam.uttorappbackend.repositories.UserRepository;
+import com.riazulislam.uttorappbackend.services.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService{
         try {
             Optional<User> userInfo = this.userRepository.findById(id);
 
-            if(userInfo.isEmpty()) {
+            if (userInfo.isEmpty()) {
                 return new ResponseEntity<>("user not found with this id: " + id, HttpStatus.NOT_FOUND);
             }
 
@@ -44,21 +45,21 @@ public class UserServiceImpl implements UserService{
         try {
             Optional<User> existingUser = this.userRepository.findById(id);
 
-            if(existingUser.isEmpty()) {
+            if (existingUser.isEmpty()) {
                 return new ResponseEntity<>("user not found with this id: " + id, HttpStatus.NOT_FOUND);
             }
 
             User updatedUser = existingUser.get();
 
-            if(user.getUsername() != null) {
+            if (user.getUsername() != null) {
                 updatedUser.setUsername(user.getUsername());
             }
 
-            if(user.getEmail() != null) {
+            if (user.getEmail() != null) {
                 updatedUser.setEmail(user.getEmail());
             }
 
-            if(user.getBio() != null) {
+            if (user.getBio() != null) {
                 updatedUser.setBio(user.getBio());
             }
 

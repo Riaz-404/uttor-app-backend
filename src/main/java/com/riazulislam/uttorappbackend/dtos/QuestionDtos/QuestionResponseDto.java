@@ -1,5 +1,6 @@
-package com.riazulislam.uttorappbackend.dtos;
+package com.riazulislam.uttorappbackend.dtos.QuestionDtos;
 
+import com.riazulislam.uttorappbackend.dtos.TopicDto;
 import com.riazulislam.uttorappbackend.models.User;
 import lombok.*;
 

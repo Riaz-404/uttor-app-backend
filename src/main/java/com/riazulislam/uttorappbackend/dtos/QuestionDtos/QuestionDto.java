@@ -1,4 +1,4 @@
-package com.riazulislam.uttorappbackend.dtos;
+package com.riazulislam.uttorappbackend.dtos.QuestionDtos;
 
 import lombok.*;
 

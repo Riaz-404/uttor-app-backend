@@ -1,22 +1,19 @@
-package com.riazulislam.uttorappbackend.services;
+package com.riazulislam.uttorappbackend.services.impl;
 
-import com.riazulislam.uttorappbackend.dtos.QuestionDto;
-import com.riazulislam.uttorappbackend.dtos.QuestionResponseDto;
+import com.riazulislam.uttorappbackend.adapters.AnswerMapper;
+import com.riazulislam.uttorappbackend.dtos.QuestionDtos.QuestionResponseDto;
 import com.riazulislam.uttorappbackend.dtos.TopicDto;
+import com.riazulislam.uttorappbackend.models.Answer;
 import com.riazulislam.uttorappbackend.models.Question;
-import com.riazulislam.uttorappbackend.models.Topic;
-import com.riazulislam.uttorappbackend.models.User;
+import com.riazulislam.uttorappbackend.repositories.AnswerRepository;
 import com.riazulislam.uttorappbackend.repositories.QuestionRepository;
-import com.riazulislam.uttorappbackend.repositories.TopicRepository;
-import com.riazulislam.uttorappbackend.repositories.UserRepository;
+import com.riazulislam.uttorappbackend.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -24,34 +21,15 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionRepository questionRepository;
 
     @Autowired
-    UserRepository userRepository;
+    AnswerRepository answerRepository;
 
     @Autowired
-    TopicRepository topicRepository;
+    AnswerMapper answerMapper;
 
     @Override
-    public ResponseEntity<?> createNewQuestion(QuestionDto question) {
+    public ResponseEntity<?> createNewQuestion(Question question) {
         try {
-            UUID userId = question.getUser();
-            Optional<User> user = this.userRepository.findById(userId);
-
-            if (user.isEmpty()) {
-                return new ResponseEntity<>("User not found with id: " + userId, HttpStatus.NOT_FOUND);
-            }
-
-            List<Topic> topics = question.getTopics().stream()
-                    .map(topicId -> topicRepository.findById(topicId)
-                            .orElseThrow(() -> new IllegalArgumentException("Topic not found")))
-                    .toList();
-
-            Question newQuestion = new Question();
-
-            newQuestion.setTitle(question.getTitle());
-            newQuestion.setBody(question.getBody());
-            newQuestion.setUser(user.get());
-            newQuestion.setTopics(topics);
-
-            Question savedQuestion = this.questionRepository.save(newQuestion);
+            Question savedQuestion = this.questionRepository.save(question);
 
             QuestionResponseDto responseDto = mapToResponseDto(savedQuestion);
 
@@ -80,6 +58,17 @@ public class QuestionServiceImpl implements QuestionService {
             }
             return questions.stream().map(this::mapToResponseDto).toList();
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> createAnswerToAQuestion(Answer answer) {
+        try {
+            Answer createdAnswer = answerRepository.save(answer);
+
+            return new ResponseEntity<>(answerMapper.toResponseDto(createdAnswer), HttpStatus.CREATED);
+        } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }

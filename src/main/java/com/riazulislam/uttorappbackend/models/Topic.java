@@ -1,5 +1,6 @@
 package com.riazulislam.uttorappbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
@@ -17,6 +18,7 @@ public class Topic extends BaseModel {
     @Column(nullable = false)
     private String name;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "topics")
     private List<Question> questions;
 }

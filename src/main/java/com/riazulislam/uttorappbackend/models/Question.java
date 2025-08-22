@@ -1,5 +1,6 @@
 package com.riazulislam.uttorappbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class Question extends BaseModel {
 
     private String body;
 
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "question_topic",
@@ -26,6 +28,11 @@ public class Question extends BaseModel {
     )
     private List<Topic> topics = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "question_user", referencedColumnName = "id")
     private User user;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Answer> answers = new ArrayList<>();
 }
